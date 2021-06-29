@@ -1,0 +1,16 @@
+{% extends 'base.html' %}   
+{% load socialaccount %}
+
+{% block title %}Page de test | Authentification Discord{% endblock title %}
+
+{% block content %}
+<h1>Test de l'authentification discord</h1>
+
+{% if user.is_authenticated %}
+    <p>Bienvenue {{ user.username }} !!!</p>
+    <a href="{% url 'account_logout' %}">Se déconnecter</a>
+{% else %}
+    <a href="{% provider_login_url 'discord' %}">Discord</a>
+{% endif %}
+
+{% endblock content %}
