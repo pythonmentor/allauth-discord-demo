@@ -45,12 +45,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
-    "django_extensions",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.discord",
     "users.apps.UsersConfig",
+    "pages.apps.PagesConfig"
 ]
 
 SITE_ID = 1
@@ -138,7 +138,7 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
-LOGIN_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "pages:home"
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
