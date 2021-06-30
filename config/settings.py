@@ -49,8 +49,11 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.discord",
+    "allauth.socialaccount.providers.google",
+    'allauth.socialaccount.providers.facebook',
+    'django_extensions',
     "users.apps.UsersConfig",
-    "pages.apps.PagesConfig"
+    "pages.apps.PagesConfig",
 ]
 
 SITE_ID = 1
@@ -138,7 +141,6 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
-LOGIN_REDIRECT_URL = "pages:home"
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -149,13 +151,47 @@ AUTHENTICATION_BACKENDS = [
 
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
-    "discord": {
-        "APP": {
-            "client_id": env("DISCORD_CLIENT_ID"),
-            "secret": env("DISCORD_CLIENT_SECRET"),
-            "key": "",
+    "google": {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
         },
-    }
+    },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time',
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.12',
+    },
 }
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_LOGOUT_REDIRECT_URL = 'pages:home'
+LOGIN_REDIRECT_URL = "pages:home"
+SOCIALACCOUNT_QUERY_EMAIL = ACCOUNT_EMAIL_REQUIRED
+SOCIALACCOUNT_EMAIL_REQUIRED = ACCOUNT_EMAIL_REQUIRED
+SOCIALACCOUNT_STORE_TOKENS = True
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
